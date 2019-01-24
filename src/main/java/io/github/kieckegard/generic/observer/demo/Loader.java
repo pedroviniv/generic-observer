@@ -31,5 +31,9 @@ public class Loader {
                 
         
         broker.publish(createdUser);
+        
+        broker.unsubscribe(sampleListener1);
+        
+        broker.publish(createdUser);
     }
 }

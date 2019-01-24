@@ -10,7 +10,9 @@ import io.github.kieckegard.generic.observer.Listener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -65,7 +67,28 @@ public class BrokerImpl implements Broker {
 
     @Override
     public void unsubscribe(Object subscriber) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Collection<List<SubscriberInfo>> allSubscribers = this.subscribers.values();
+        if(allSubscribers == null || allSubscribers.isEmpty())
+            return;
+        
+        Iterator<List<SubscriberInfo>> subscribersIterator = allSubscribers.iterator();
+        while(subscribersIterator.hasNext()) {
+            
+            List<SubscriberInfo> currentTypeSubscribers = subscribersIterator.next();
+            Iterator<SubscriberInfo> currentTypeSubscribersIterator 
+                    = currentTypeSubscribers.iterator();
+            
+            while(currentTypeSubscribersIterator.hasNext()) {
+            
+                SubscriberInfo currentTypeSubscriber 
+                        = currentTypeSubscribersIterator.next();
+                
+                if(currentTypeSubscriber.getInstance().equals(subscriber)) {
+                    currentTypeSubscribersIterator.remove();
+                }
+            }
+        }
     }
 
     @Override
